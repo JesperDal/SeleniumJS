@@ -38,8 +38,8 @@ let checkBoxOne = await driver.findElement(By.xpath("/html/body/div/div/div/ul/l
    });
         checkBoxOne.should.be.true;
 
-    //assert - is text in counter correct
-    let confirmCounter = await driver.findElement(By.xpath("/html/body/div/div/div/span")).getText().then(function(value){
+//assert - is text in counter correct
+let confirmCounter = await driver.findElement(By.xpath("/html/body/div/div/div/span")).getText().then(function(value){
         return value
     });
         confirmCounter.should.equal("5 of 6 remaining");
@@ -65,10 +65,29 @@ await driver.sleep(250)
         await driver.sleep(250); //waiting and then restarting loop until the 12th time, then exits the loop
       }
 
-      // close the browser
-      await driver.sleep(1000);
-      await driver.quit();
+
     });
+
+    const checkBoxes = await driver.findElements(
+      By.xpath("//input[@type='checkbox']")
+    );
+
+    checkBoxes.forEach(async (checkbox) => {
+      await checkbox.isSelected().then(async (checked) => {
+        if (!checked) {
+          await checkbox.click();
+        }
+      });
+      await driver.sleep(150);
+
+      let isChecked = await checkbox.isSelected();
+      isChecked.should.be.true;
+
+
+    });
+    // close the browser
+    await driver.sleep(1000);
+    await driver.quit();
 }
 tests();
 
